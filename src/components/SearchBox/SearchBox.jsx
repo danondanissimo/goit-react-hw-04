@@ -1,18 +1,26 @@
-import css from "./SearchBox.module.css";
+const SearchBox = ({ onSubmit }) => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-const SearchBox = ({ filter, onChange }) => {
+    const form = event.target;
+
+    const searchQuery = form.elements.search.value;
+    onSubmit(searchQuery);
+  };
+
   return (
-    <div className={css.container}>
-      <label className={css.label}>
-        Find contacts by name
+    <header>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          value={filter}
-          onChange={onChange}
-          className={css.field}
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          name="search"
         />
-      </label>
-    </div>
+        <button type="submit">Search</button>
+      </form>
+    </header>
   );
 };
 
