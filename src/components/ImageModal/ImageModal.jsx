@@ -2,6 +2,10 @@ import Modal from "react-modal";
 import css from "./ImageModal.module.css";
 
 const ImageModal = ({ isOpen, modalContent, closeModal }) => {
+  const noBackgroundScroll = () => {
+    document.body.style.overflow = "hidden";
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -12,6 +16,7 @@ const ImageModal = ({ isOpen, modalContent, closeModal }) => {
       ariaHideApp={false}
       className={css.modal}
       overlayClassName={css.overlay}
+      onAfterOpen={noBackgroundScroll}
     >
       <img
         src={modalContent.imgModal}
