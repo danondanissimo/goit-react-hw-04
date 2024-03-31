@@ -82,6 +82,14 @@ function App() {
     setModalContent({});
   };
 
+  const disableBackgroundScroll = () => {
+    document.body.style.overflow = "hidden";
+  };
+
+  const enableBackgroundScroll = () => {
+    document.body.style.overflow = "unset";
+  };
+
   return (
     <>
       <SearchBox onSubmit={onSetSearchQuery} />
@@ -98,6 +106,8 @@ function App() {
         modalContent={modalContent}
         openModal={openModal}
         closeModal={closeModal}
+        enableBackgroundScroll={enableBackgroundScroll}
+        disableBackgroundScroll={disableBackgroundScroll}
       />
     </>
   );
