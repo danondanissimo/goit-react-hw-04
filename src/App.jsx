@@ -2,7 +2,7 @@ import "./App.css";
 
 import { useEffect, useState } from "react";
 
-import ImageGallery from "./ImageGallery/ImageGallery.jsx";
+import ImageGallery from "./components/ImageGallery/ImageGallery.jsx";
 import { requestImagesByQuery } from "./components/Services/Api.js";
 import Loader from "./components/Loader/Loader.jsx";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage.jsx";
@@ -15,12 +15,13 @@ import ImageModal from "./components/ImageModal/ImageModal.jsx";
 function App() {
   const [images, setImages] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(false);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [modalContent, setModalContent] = useState([]);
+  const [modalContent, setModalContent] = useState({});
   const notify = () => toast.error("Please fill in the Search field.");
 
   const onSetSearchQuery = (searchTerm) => {
@@ -40,7 +41,14 @@ function App() {
         setLoading(true);
         const response = await requestImagesByQuery(query, page);
 
+        if (response.data.total === 0) {
+          toast.error("Sorry, we couldn't find anything.");
+          setImages(null);
+          setLoading(false);
+        }
+
         if (page !== 1) {
+          setLoadingMore(false);
           setImages((prevResult) => {
             return [...prevResult, ...response.data.results];
           });
@@ -61,15 +69,18 @@ function App() {
 
   const loadMore = () => {
     setPage((page) => page + 1);
-    window.scrollBy(0, 1000);
+    setLoadingMore(true);
   };
 
-  const modalToggle = (likes, description, imgModal) => {
+  const openModal = ({ likes, description, imgModal }) => {
     setIsOpen(!isOpen);
-    setModalContent([likes, description, imgModal]);
+    setModalContent({ likes, description, imgModal });
   };
 
-  console.log(modalContent);
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalContent({});
+  };
 
   return (
     <>
@@ -77,13 +88,16 @@ function App() {
       <Toaster />
       {error && <ErrorMessage />}
       {loading === true && <Loader />}
-      {images && <ImageGallery images={images} modalToggle={modalToggle} />}
-      {totalPages && page < totalPages && <LoadMoreBtn onClick={loadMore} />}
+      {images && <ImageGallery images={images} openModal={openModal} />}
+      {loadingMore === false && totalPages && page < totalPages && (
+        <LoadMoreBtn onClick={loadMore} />
+      )}
+      {loadingMore === true && <Loader />}
       <ImageModal
         isOpen={isOpen}
         modalContent={modalContent}
-        modalToggle={modalToggle}
-        ariaHideApp={false}
+        openModal={openModal}
+        closeModal={closeModal}
       />
     </>
   );

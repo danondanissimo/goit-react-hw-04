@@ -1,16 +1,19 @@
-const ImageCard = ({ likes, description, imgSrc, imgModal, modalToggle }) => {
-  const handleClick = () => {
-    // const { src, alt } = event.target.attributes.value;
-    // const src = event.target.attributes.src.value;
-    // const alt = event.target.attributes.alt.value;
-    // const likes = event.target.nextElementSibling.textContent;
+import css from "./ImageCard.module.css";
 
-    modalToggle(likes, description, imgModal);
+const ImageCard = ({ likes, description, imgSrc, imgModal, openModal }) => {
+  const handleClick = () => {
+    const imageData = { likes, description, imgModal };
+    openModal(imageData);
   };
   return (
-    <div>
-      <img src={imgSrc} alt={description} onClick={handleClick} />
-      <p>Likes:{likes}</p>
+    <div className={css.container}>
+      <img
+        src={imgSrc}
+        alt={description}
+        onClick={handleClick}
+        className={css.image}
+      />
+      <p>Likes: {likes}</p>
     </div>
   );
 };

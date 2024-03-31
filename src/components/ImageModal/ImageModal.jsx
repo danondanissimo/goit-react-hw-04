@@ -1,16 +1,27 @@
-import ReactModal from "react-modal";
+import Modal from "react-modal";
+import css from "./ImageModal.module.css";
 
-const ImageModal = ({ isOpen, modalContent, modalToggle }) => {
+const ImageModal = ({ isOpen, modalContent, closeModal }) => {
   return (
-    <ReactModal
+    <Modal
       isOpen={isOpen}
       shouldCloseOnOverlayClick={true}
       shouldCloseOnEsc={true}
-      onRequestClose={modalToggle}
+      onRequestClose={closeModal}
+      contentLabel="Image modal"
+      ariaHideApp={false}
+      className={css.modal}
+      overlayClassName={css.overlay}
     >
-      <img src={modalContent[2]} alt={modalContent[1]} />
-      <p>{modalContent[0]}</p>
-    </ReactModal>
+      <img
+        src={modalContent.imgModal}
+        alt={modalContent.description}
+        className={css.image}
+      />
+      <p className={css.textContainer}>
+        <span className={css.text}>Likes: {modalContent.likes}</span>
+      </p>
+    </Modal>
   );
 };
 
